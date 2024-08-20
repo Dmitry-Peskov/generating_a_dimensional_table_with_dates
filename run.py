@@ -1,5 +1,6 @@
 from collections import namedtuple
 from datetime import datetime, timedelta
+from typing import Optional
 
 
 FIELDS_LIST: list[str] = [
@@ -15,16 +16,45 @@ FIELDS_LIST: list[str] = [
     "quarter",        # 3
     "is_weekends"     # 0
 ]
-FIELDS_STR = ", ".join(FIELDS_LIST) # "datetime, date, year, month, month_name_ru, month_name_en, day, week_num, week_day, quarter, is_weekends"
-DateMetaData = namedtuple(typename="DateMetaData", field_names=FIELDS_STR)
+DateMetaData = namedtuple(typename="DateMetaData", field_names=FIELDS_LIST)
 
 def get_next_day(date: datetime) -> datetime:
     return date + timedelta(days=1)
 
 
+def get_month_name_ru(month_num: int) -> Optional[str]:
+    months = {
+        1: "Январь",
+        2: "Февраль",
+        3: "Март",
+        4: "Апрель",
+        5: "Май",
+        6: "Июнь",
+        7: "Июль",
+        8: "Август",
+        9: "Сентябрь",
+        10: "Октябрь",
+        11: "Ноябрь",
+        12: "Декабрь"
+    }
+    return months.get(month_num, None)
+
+
 
 def extract_metadata_from_date(date: datetime) -> DateMetaData:
-    raise NotImplemented
+    return DateMetaData(
+        datetime=date,
+        date=date.date(),
+        year=date.year,
+        month=date.month,
+        month_name_ru=get_month_name_ru(month_num=date.month),
+        month_name_en=date.strftime("%B"),
+        day=date.day,
+        week_num=date.isocalendar().week,
+        week_day=date.weekday() + 1,
+        quarter=(date.month - 1) // 3 + 1,
+        is_weekends=1 if (date.weekday() + 1) in (6, 7) else 0
+    )
 
 
 def add_data_to_storage(date_metadata: DateMetaData, storage: list[dict]) -> None:
