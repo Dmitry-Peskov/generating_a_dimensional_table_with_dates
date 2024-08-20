@@ -1,4 +1,5 @@
 import csv
+import json
 from collections import namedtuple
 from datetime import datetime, timedelta
 from typing import Optional
@@ -63,14 +64,20 @@ def add_data_to_storage(date_metadata: DateMetaData, storage: list[dict]) -> Non
 
 
 def generate_filename(start: datetime, end: datetime) -> str:
-    return f"dimensional_table_with_dates_{start.strftime('%d.%m.%Y')}-{end.strftime('%d.%m.%Y')}.csv"
+    return f"dimensional_table_with_dates_{start.strftime('%d.%m.%Y')}-{end.strftime('%d.%m.%Y')}"
 
 
 def write_to_csv(filename: str, fields_name: list[str], data: list[dict]) -> None:
-    with open(filename, "w", encoding="utf-8", newline="") as file:
+    with open(f"{filename}.csv", "w", encoding="utf-8", newline="") as file:
         writer = csv.DictWriter(file, fieldnames=fields_name)
         writer.writeheader()
         writer.writerows(data)
+
+
+def write_to_json(filename: str, data: list[dict]) -> None:
+    with open(f"{filename}.json", "w", encoding="utf-8") as file:
+        json_data = json.dumps(data, default=lambda x: list(x) if isinstance(x, tuple) else str(x), indent=2)
+        file.write(json_data)
 
 
 if __name__ == "__main__":
@@ -85,3 +92,4 @@ if __name__ == "__main__":
         current_processed_date:datetime = get_next_day(date=current_processed_date)       # переключаемся на следующую дату
     file_name: str = generate_filename(start=start_date, end=end_date)                    # генерируем название файла по шаблону
     write_to_csv(filename=file_name, fields_name=FIELDS_LIST, data=result_list)  # записываем результат в csv файл
+    write_to_json(filename=file_name, data=result_list)                          # записываем результат в json файл
