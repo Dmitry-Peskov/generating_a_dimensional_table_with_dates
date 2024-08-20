@@ -1,5 +1,5 @@
 from collections import namedtuple
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 FIELDS_LIST: list[str] = [
@@ -19,7 +19,8 @@ FIELDS_STR = ", ".join(FIELDS_LIST) # "datetime, date, year, month, month_name_r
 DateMetaData = namedtuple(typename="DateMetaData", field_names=FIELDS_STR)
 
 def get_next_day(date: datetime) -> datetime:
-    raise NotImplemented
+    return date + timedelta(days=1)
+
 
 
 def extract_metadata_from_date(date: datetime) -> DateMetaData:
