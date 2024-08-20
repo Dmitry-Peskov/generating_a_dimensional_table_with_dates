@@ -18,13 +18,15 @@ FIELDS_LIST: list[str] = [
     "quarter",        # 3
     "is_weekends"     # 0
 ]
-DateMetaData = namedtuple(typename="DateMetaData", field_names=FIELDS_LIST)
+DateMetaData = namedtuple(typename="DateMetaData", field_names=FIELDS_LIST) # контейнер, для хранения метаданных конкретной даты
 
 def get_next_day(date: datetime) -> datetime:
+    """Получить следующий за переданным в аргументы день"""
     return date + timedelta(days=1)
 
 
 def get_month_name_ru(month_num: int) -> Optional[str]:
+    """На основе номера месяца, получить его русскоязычное наименование"""
     months = {
         1: "Январь",
         2: "Февраль",
@@ -44,6 +46,7 @@ def get_month_name_ru(month_num: int) -> Optional[str]:
 
 
 def extract_metadata_from_date(date: datetime) -> DateMetaData:
+    """Извлечь из конкретной даты её метаданные"""
     return DateMetaData(
         datetime=date,
         date=date.date(),
@@ -60,14 +63,17 @@ def extract_metadata_from_date(date: datetime) -> DateMetaData:
 
 
 def add_data_to_storage(date_metadata: DateMetaData, storage: list[dict]) -> None:
+    """Перевести метаданные даты в словарь (dict) и добавить в промежуточное хранилище"""
     storage.append(date_metadata._asdict())
 
 
 def generate_filename(start: datetime, end: datetime) -> str:
+    """Сгенерировать название файла по маске: dimensional_table_with_dates_ДД.ММ.ГГГГ-ДД.ММ.ГГГГ"""
     return f"dimensional_table_with_dates_{start.strftime('%d.%m.%Y')}-{end.strftime('%d.%m.%Y')}"
 
 
 def write_to_csv(filename: str, fields_name: list[str], data: list[dict]) -> None:
+    """Записать результат в csv файл"""
     with open(f"{filename}.csv", "w", encoding="utf-8", newline="") as file:
         writer = csv.DictWriter(file, fieldnames=fields_name)
         writer.writeheader()
@@ -75,6 +81,7 @@ def write_to_csv(filename: str, fields_name: list[str], data: list[dict]) -> Non
 
 
 def write_to_json(filename: str, data: list[dict]) -> None:
+    """Записать результат в json файл"""
     with open(f"{filename}.json", "w", encoding="utf-8") as file:
         json_data = json.dumps(data, default=lambda x: list(x) if isinstance(x, tuple) else str(x), indent=2)
         file.write(json_data)
