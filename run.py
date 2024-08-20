@@ -43,10 +43,10 @@ if __name__ == "__main__":
     end_date: datetime = datetime(year=2100, month=1, day=1)    # окончание диапазона дат
     result_list: list[dict] = []                                # список для промежуточного хранения результирующей последовательности дат
     current_processed_date: datetime = start_date               # текущая дата из которой извлекаются метаданные и сохраняются в промежуточный результат
-    # в цикле перебираем каждую дату из заданного диапазона, сохраняем метаданные каждой в result_list
+    # в цикле перебираем каждую дату из заданного диапазона, сохраняем метаданные каждой в result_list, до тех пор пока не превысим end_date
     while current_processed_date < end_date:
-        metadata: DateMetaData = extract_metadata_from_date(date=current_processed_date)
-        add_data_to_storage(date_metadata=metadata, storage=result_list)
-        current_processed_date:datetime = get_next_day(date=current_processed_date)
-    file_name: str = generate_filename(start=start_date, end=end_date)
-    write_to_csv(filename=file_name, data=result_list)
+        metadata: DateMetaData = extract_metadata_from_date(date=current_processed_date)  # извлекаем метаданные из даты в current_processed_date
+        add_data_to_storage(date_metadata=metadata, storage=result_list)                  # сохраняем метаданные в result_list
+        current_processed_date:datetime = get_next_day(date=current_processed_date)       # переключаемся на следующую дату
+    file_name: str = generate_filename(start=start_date, end=end_date)                    # генерируем название файла по шаблону
+    write_to_csv(filename=file_name, data=result_list)  # записываем результат в csv файл
