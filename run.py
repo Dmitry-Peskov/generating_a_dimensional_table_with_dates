@@ -1,3 +1,6 @@
+from collections import namedtuple
+
+
 FIELDS_LIST: list[str] = [
     "datetime",       # 2024-08-20 00:00:00
     "date",           # 2024-08-20
@@ -12,6 +15,7 @@ FIELDS_LIST: list[str] = [
     "is_weekends"     # 0
 ]
 FIELDS_STR = ", ".join(FIELDS_LIST) # "datetime, date, year, month, month_name_ru, month_name_en, day, week_num, week_day, quarter, is_weekends"
+DateMetaData = namedtuple(typename="DateMetaData", field_names=FIELDS_STR)
 
 if __name__ == "__main__":
     pass
