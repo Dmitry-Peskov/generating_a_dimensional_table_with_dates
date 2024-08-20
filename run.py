@@ -58,7 +58,7 @@ def extract_metadata_from_date(date: datetime) -> DateMetaData:
 
 
 def add_data_to_storage(date_metadata: DateMetaData, storage: list[dict]) -> None:
-    raise NotImplemented
+    storage.append(date_metadata._asdict())
 
 
 def generate_filename(start: datetime, end: datetime) -> str:
