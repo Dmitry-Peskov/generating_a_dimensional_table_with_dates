@@ -62,7 +62,7 @@ def add_data_to_storage(date_metadata: DateMetaData, storage: list[dict]) -> Non
 
 
 def generate_filename(start: datetime, end: datetime) -> str:
-    raise NotImplemented
+    return f"dimensional_table_with_dates_{start.strftime('%d.%m.%Y')}-{end.strftime('%d.%m.%Y')}.csv"
 
 
 def write_to_csv(filename: str, data: list[dict]) -> None:
